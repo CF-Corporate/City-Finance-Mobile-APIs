@@ -28,7 +28,7 @@ builder.Services.AddSwaggerGen(c =>
     var apiKeyScheme = new OpenApiSecurityScheme
     {
         Description = "API Key authentication",
-        Name = "APIKey",
+        Name = "ApiKey",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey
     };
@@ -69,7 +69,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 
-//app.UseAuthorization();
+app.UseAuthorization();
 
 app.MapControllers();
 

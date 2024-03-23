@@ -24,15 +24,15 @@ namespace GniApi.Helper
             var authorization2 = context.HttpContext.Request.Cookies["ApiKey"];
 
 
-            if (AuthenticationHeaderValue.TryParse(authorization, out var value))
-            {
-                if(value.ToString() != configuration.GetValue<string>("ApiKey"))
-                {
-                    context.Result= new UnauthorizedResult();
-                }
-                context.HttpContext.Response.Cookies.Append("ApiKey",value.ToString());
-            }
-            else if (AuthenticationHeaderValue.TryParse(authorization2, out var value2))
+            //if (AuthenticationHeaderValue.TryParse(authorization, out var value))
+            //{
+            //    if(value.ToString() != configuration.GetValue<string>("ApiKey"))
+            //    {
+            //        context.Result= new UnauthorizedResult();
+            //    }
+            //    context.HttpContext.Response.Cookies.Append("ApiKey",value.ToString());
+            //}
+             if (AuthenticationHeaderValue.TryParse(authorization, out var value2))
             {
                 if (value2.ToString() != configuration.GetValue<string>("ApiKey"))
                 {
