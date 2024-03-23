@@ -55,7 +55,6 @@ builder.Services.AddScoped<IOracleQueries, OracleQueries>();
 builder.Services.AddScoped<HeaderCheckActionFilter>();
 
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

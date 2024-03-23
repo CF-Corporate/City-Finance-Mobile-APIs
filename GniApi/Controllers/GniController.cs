@@ -12,7 +12,7 @@ namespace GniApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     //[ServiceFilter(typeof(HeaderCheckActionFilter))]
-    public class GniController : ControllerBase
+    class GniController : ControllerBase
     {
         private readonly IOracleQueries oracleQueries;
         private readonly IWebHostEnvironment webHostEnvironment;
@@ -136,17 +136,11 @@ namespace GniApi.Controllers
         {
             var json = JsonSerializer.Serialize(model);
 
-
-
             var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_create_request", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
-
-
-
-
-
 
             return Content(result, "application/json");
         }
+
         [HttpPost("PostLoanRequest")]
         public IActionResult PostLoanRequest( int requestId)
         {
