@@ -40,7 +40,7 @@ namespace GniApi.Controllers
 
         // TESTED
         [HttpGet("{pin}/payment-history")]
-        public IActionResult PaymentHistory([FromRoute(Name = "payment-id")] string pin, 
+        public IActionResult PaymentHistory([FromRoute(Name = "pin")] string pin, 
                                             string loanId, 
                                             int page, 
                                             int size, 
