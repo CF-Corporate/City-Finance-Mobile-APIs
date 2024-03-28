@@ -21,6 +21,7 @@ namespace GniApi.Controllers
         public CustomerController(IOracleQueries oracleQueries)
         {
             this.oracleQueries = oracleQueries;
+
             //this.webHostEnvironment = webHostEnvironment;
         }
 
