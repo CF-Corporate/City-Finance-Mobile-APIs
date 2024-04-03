@@ -54,6 +54,15 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<IOracleQueries, OracleQueries>();
 builder.Services.AddScoped<HeaderCheckActionFilter>();
 
+builder.Services.AddHttpClient("erpClient", c =>
+
+{
+    c.BaseAddress = new Uri("http://172.16.30.26:8083/api/v1");
+
+    c.DefaultRequestHeaders.Add("x-api-key", "city_finance");
+}
+);
+
 
 var app = builder.Build();
 

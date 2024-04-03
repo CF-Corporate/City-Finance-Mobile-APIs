@@ -16,25 +16,34 @@ namespace GniApi.Controllers
     {
         private readonly IOracleQueries oracleQueries;
 
+        private readonly IHttpClientFactory httpClientFactory;
+
         //private readonly IWebHostEnvironment webHostEnvironment;
 
-        public CustomerController(IOracleQueries oracleQueries)
+        public CustomerController(IOracleQueries oracleQueries, IHttpClientFactory httpClientFactory)
         {
             this.oracleQueries = oracleQueries;
-
+            this.httpClientFactory = httpClientFactory;
             //this.webHostEnvironment = webHostEnvironment;
         }
 
 
         // NEEDS DEVELOPMENT
         [HttpGet("{pin}/limit")]
-        public IActionResult Limit([FromRoute] string pin)
+        public async Task<IActionResult> LimitAsync([FromRoute] string pin)
         {
-            return Ok("""
-                {
-                    "limit": 5000
-                }
-                """);
+
+            var client = httpClientFactory.CreateClient("erpClient");
+
+            var builder = new UriBuilder(client.BaseAddress + $"/limits");
+            builder.Query =$"?finCode={pin}"; // Default query parameter
+
+            // Send the GET request asynchronously
+            HttpResponseMessage response = await client.GetAsync(builder.Uri);
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            return Ok(result);
             // Use the customer_fincode parameter here
             // Example: return Ok($"Fincode: {customer_fincode}");
         }
