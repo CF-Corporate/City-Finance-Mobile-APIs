@@ -91,7 +91,7 @@ namespace GniApi.Controllers
 
         [HttpGet("{pin}/loans")]
         public IActionResult Loans([FromRoute(Name = "pin")] string pin, 
-                                    string status, 
+                                    string? status, 
                                     DateTime fromDate, 
                                     DateTime toDate, 
                                     int page, 
