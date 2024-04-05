@@ -77,6 +77,18 @@ namespace GniApi.Controllers
         }
 
 
+        [HttpGet("{pin}/payment-plan/{loan-id}")]
+
+        public IActionResult PaymentPlan([FromRoute(Name = "loan-id")] string loanId)
+        {
+            var json = JsonSerializer.Serialize(new { loanId });
+
+            var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_payment_plan", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+
+            return Content(result, "application/json");
+        }
+
+
         [HttpGet("{pin}/loans")]
         public IActionResult Loans([FromRoute(Name = "pin")] string pin, 
                                     string status, 
@@ -118,6 +130,17 @@ namespace GniApi.Controllers
             return Content(result, "application/json");
 
         }
+
+        [HttpPost("{pin}/loans/pay")]
+        public IActionResult PayLoan([FromRoute] string pin, string loanId, decimal amount, DateTime paymentDate)
+        {
+            var json = JsonSerializer.Serialize(new { pin, loanId, amount, paymentDate });
+
+            var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_pay", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+
+            return Content(result, "application/json");
+        }
+
 
         [HttpGet("{pin}/loan-requests")]
         public IActionResult LoanRequests([FromRoute(Name = "pin")] string pin, 
@@ -169,8 +192,7 @@ namespace GniApi.Controllers
             return Content(result, "application/json");
         }
 
-
-
+   
 
 
     }
