@@ -10,13 +10,11 @@ using System.Text.Json.Serialization;
 
 namespace GniApi.Controllers
 {
-    [Route("api/internal")]
+    [Route("api/v1/notification")]
     //[ServiceFilter(typeof(InternalHeaderCheckActionFilter))]
     [ApiController]
-    [ApiKeyAuthorizationFilter("Internal")]
     public class InternalController : ControllerBase
     {
-
         private readonly IHttpClientFactory httpClientFactory;
 
         public InternalController(IHttpClientFactory httpClientFactory)
@@ -24,16 +22,23 @@ namespace GniApi.Controllers
             this.httpClientFactory = httpClientFactory;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> InitializeAction([FromBody] dynamic jsonData)
+        [HttpPost("send")]
+
+        //Security needed
+        public async Task<IActionResult> SendNotification([FromBody] dynamic jsonData)
         {
-            var client = httpClientFactory.CreateClient("gniClient");
 
-            var builder = new UriBuilder(client.BaseAddress + "/controller");
 
-            string jsonString = JsonSerializer.Serialize(jsonData);
+            var auth = HttpContext.Request.Headers.Authorization;
 
-            await Console.Out.WriteLineAsync(   jsonString);
+
+            //var client = httpClientFactory.CreateClient("gniClient");
+
+            //var builder = new UriBuilder(client.BaseAddress + "/controller");
+
+            //string jsonString = JsonSerializer.Serialize(jsonData);
+
+            //await Console.Out.WriteLineAsync(jsonString);
 
             //byte[] contentBytes = Encoding.UTF8.GetBytes(jsonString);
 
@@ -48,7 +53,7 @@ namespace GniApi.Controllers
 
 
 
-            await Console.Out.WriteLineAsync( "Mock Send Request" );
+            await Console.Out.WriteLineAsync("Mock Send Request");
 
             return Ok();
 
