@@ -13,11 +13,11 @@ namespace GniApi.Controllers
     [Route("api/v1/notification")]
     //[ServiceFilter(typeof(InternalHeaderCheckActionFilter))]
     [ApiController]
-    public class InternalController : ControllerBase
+    public class NotificationController : ControllerBase
     {
         private readonly IHttpClientFactory httpClientFactory;
 
-        public InternalController(IHttpClientFactory httpClientFactory)
+        public NotificationController(IHttpClientFactory httpClientFactory)
         {
             this.httpClientFactory = httpClientFactory;
         }
