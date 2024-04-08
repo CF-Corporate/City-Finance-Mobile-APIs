@@ -1,4 +1,5 @@
-﻿using GniApi.Dtos.RequestDto.RequestDto;
+﻿using GniApi.Dtos.RequestDto;
+using GniApi.Dtos.RequestDto.RequestDto;
 using GniApi.Helper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,6 @@ namespace GniApi.Controllers
         }
 
 
-        // NEEDS DEVELOPMENT
         [HttpGet("{pin}/limit")]
         public async Task<IActionResult> LimitAsync([FromRoute] string pin)
         {
@@ -47,6 +47,8 @@ namespace GniApi.Controllers
             // Use the customer_fincode parameter here
             // Example: return Ok($"Fincode: {customer_fincode}");
         }
+
+
 
         // TESTED
         [HttpGet("{pin}/payment-history")]
@@ -168,6 +170,21 @@ namespace GniApi.Controllers
             return Content(result, "application/json");
         }
 
+        [HttpPost("{pin}/loan-requests/{request-id}/action)")]
+
+        public IActionResult LoanRequestAction ([FromRoute(Name ="request-id")] int requestId, [FromBody] LoanRequestActionDto dto)
+        {
+
+            if( requestId != dto.requestId)
+            {
+                return BadRequest(new { message = "request-id in request route does not match with request-id in request body!", code = 400});
+            }
+            var json = JsonSerializer.Serialize(new { dto });
+
+            var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_action", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+
+            return Content(result, "application/json");
+        }
 
         [HttpPost("{pin}/loan-requests/create")]
         public IActionResult CreateLoanRequest([FromBody] RequestDto model)
