@@ -3,6 +3,7 @@
     public class Loanrequest
     {
         public int amount { get; set; }
+        public int amountAfterCommission { get; set; }
         public int productCode { get; set; }
         public bool limitExceeded { get; set; }
         public int percentageRate { get; set; }

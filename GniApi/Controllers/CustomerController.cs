@@ -94,9 +94,9 @@ namespace GniApi.Controllers
                                     string? status, 
                                     DateTime fromDate, 
                                     DateTime toDate, 
-                                    int page, 
-                                    int size, 
-                                    string sort)
+                                    int? page, 
+                                    int? size , 
+                                    string? sort)
         {
             var json = JsonSerializer.Serialize(new { pin, status, fromDate = fromDate.ToString("yyyy-MM-dd"), toDate = toDate.ToString("yyyy-MM-dd"), page, size, sort });
 

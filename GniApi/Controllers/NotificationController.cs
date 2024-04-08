@@ -17,9 +17,12 @@ namespace GniApi.Controllers
     {
         private readonly IHttpClientFactory httpClientFactory;
 
-        public NotificationController(IHttpClientFactory httpClientFactory)
+        private readonly IConfiguration configuration;
+
+        public NotificationController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             this.httpClientFactory = httpClientFactory;
+            this.configuration = configuration;
         }
 
         [HttpPost("send")]
@@ -29,7 +32,12 @@ namespace GniApi.Controllers
         {
 
 
-            var auth = HttpContext.Request.Headers.Authorization;
+            var auth = HttpContext.Request.Headers["SecretKey"].ToString();
+
+            if (string.IsNullOrEmpty(auth) || auth != configuration.GetValue<string>("SecretKey"))
+            {
+                return Unauthorized();
+            }
 
 
             //var client = httpClientFactory.CreateClient("gniClient");

@@ -33,7 +33,15 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.ApiKey
     };
 
+    var securityKeyScheme = new OpenApiSecurityScheme
+    {
+        Description = "Secret Key authentication",
+        Name = "SecretKey",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey
+    };
     c.AddSecurityDefinition("ApiKey", apiKeyScheme);
+    c.AddSecurityDefinition("SecurityKey", securityKeyScheme);
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -46,9 +54,25 @@ builder.Services.AddSwaggerGen(c =>
                     Id = "ApiKey"
                 }
             },
+
             Array.Empty<string>()
         }
     });
+    //c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    //{
+    //    {
+    //        new OpenApiSecurityScheme
+    //        {
+    //            Reference = new OpenApiReference
+    //            {
+    //                Type = ReferenceType.Header,
+    //                Id = "SecretKey"
+    //            }
+    //        },
+
+    //        Array.Empty<string>()
+    //    }
+    //});
 });
 
 builder.Services.AddScoped<IOracleQueries, OracleQueries>();
