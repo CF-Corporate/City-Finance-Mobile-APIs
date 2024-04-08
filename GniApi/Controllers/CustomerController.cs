@@ -170,7 +170,7 @@ namespace GniApi.Controllers
             return Content(result, "application/json");
         }
 
-        [HttpPost("{pin}/loan-requests/{request-id}/action)")]
+        [HttpPost("{pin}/loan-requests/{request-id}/action")]
 
         public IActionResult LoanRequestAction ([FromRoute(Name ="request-id")] int requestId, [FromBody] LoanRequestActionDto dto)
         {
