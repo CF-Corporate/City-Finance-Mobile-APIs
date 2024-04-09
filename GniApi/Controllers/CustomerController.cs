@@ -146,14 +146,14 @@ namespace GniApi.Controllers
 
         [HttpGet("{pin}/loan-requests")]
         public IActionResult LoanRequests([FromRoute(Name = "pin")] string pin, 
-                                              string status, 
-                                              DateTime fromDate,
-                                              DateTime toDate, 
-                                              int page, 
-                                              int size, 
-                                              string sort)
+                                              string? status, 
+                                              DateTime? fromDate,
+                                              DateTime? toDate, 
+                                              int? page, 
+                                              int? size, 
+                                              string? sort)
         {
-            var json = JsonSerializer.Serialize(new { pin, status, fromDate = fromDate.ToString("yyyy-MM-dd"), toDate = toDate.ToString("yyyy-MM-dd"), page, size, sort });
+            var json = JsonSerializer.Serialize(new { pin, status, fromDate = fromDate?.ToString("yyyy-MM-dd"), toDate = toDate?.ToString("yyyy-MM-dd"), page, size, sort });
 
             var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_requests", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
