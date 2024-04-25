@@ -31,7 +31,6 @@ namespace GniApi.Controllers
         public async Task<IActionResult> SendNotification([FromBody] dynamic jsonData)
         {
 
-
             var auth = HttpContext.Request.Headers["SecretKey"].ToString();
 
             if (string.IsNullOrEmpty(auth) || auth != configuration.GetValue<string>("SecretKey"))

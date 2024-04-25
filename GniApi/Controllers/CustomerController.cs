@@ -202,14 +202,15 @@ namespace GniApi.Controllers
         {
             var json = JsonSerializer.Serialize(new { requestId });
 
-            var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_post_request",
-                new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, 
-                new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
-            return Content(result, "application/json");
+                var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_post_request",
+               new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json },
+               new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+
+                return Content(result, "application/json");
+           
         }
 
-   
 
 
     }

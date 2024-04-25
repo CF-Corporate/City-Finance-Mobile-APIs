@@ -1,3 +1,4 @@
+using GniApi.ExceptionHandling;
 using GniApi.Helper;
 using Microsoft.OpenApi.Models;
 
@@ -75,6 +76,8 @@ builder.Services.AddSwaggerGen(c =>
     //});
 });
 
+
+
 builder.Services.AddScoped<IOracleQueries, OracleQueries>();
 builder.Services.AddScoped<HeaderCheckActionFilter>();
 
@@ -89,6 +92,9 @@ builder.Services.AddHttpClient("erpClient", c =>
 
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
