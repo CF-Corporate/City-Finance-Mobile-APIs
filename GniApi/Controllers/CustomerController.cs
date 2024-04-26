@@ -179,7 +179,7 @@ namespace GniApi.Controllers
             {
                 return BadRequest(new { message = "request-id in request route does not match with request-id in request body!", code = 400});
             }
-            var json = JsonSerializer.Serialize(new { dto });
+            var json = JsonSerializer.Serialize(new { dto.requestId, dto.status } );
 
             var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_action", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
