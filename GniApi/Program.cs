@@ -1,5 +1,6 @@
 using GniApi.ExceptionHandling;
 using GniApi.Helper;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,8 +57,22 @@ builder.Services.AddSwaggerGen(c =>
                 }
             },
 
+
             Array.Empty<string>()
-        }
+        },
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "SecretKey"
+                }
+            },
+
+
+            Array.Empty<string>()
+        },
     });
     //c.AddSecurityRequirement(new OpenApiSecurityRequirement
     //{
@@ -89,6 +104,16 @@ builder.Services.AddHttpClient("erpClient", c =>
     c.DefaultRequestHeaders.Add("x-api-key", "city_finance");
 }
 );
+
+
+builder.Services.AddHttpClient("mobileClient", c =>
+{
+    c.BaseAddress = new Uri($"https://bokt.msolution.az/loan/v1.0");
+
+    c.DefaultRequestHeaders.Add("ApiKey", "b7a35c5a-ebd1-486e-85a0-e749f2f70ef9"
+);
+
+});
 
 
 var app = builder.Build();

@@ -1,4 +1,5 @@
-﻿using GniApi.Helper;
+﻿using GniApi.Dtos.RequestDto;
+using GniApi.Helper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,43 +29,61 @@ namespace GniApi.Controllers
         [HttpPost("send")]
 
         //Security needed
-        public async Task<IActionResult> SendNotification([FromBody] dynamic jsonData)
+        public async Task<IActionResult> SendNotification([FromBody] NotificationActionRequestDto requestDto)
         {
-
+            
+            // Validate authorization
             var auth = HttpContext.Request.Headers["SecretKey"].ToString();
-
             if (string.IsNullOrEmpty(auth) || auth != configuration.GetValue<string>("SecretKey"))
             {
                 return Unauthorized();
             }
 
+            // Create HttpClient
+            var client = httpClientFactory.CreateClient("mobileClient");
 
-            //var client = httpClientFactory.CreateClient("gniClient");
+            // Construct Request URI
+            var builder = new UriBuilder(client.BaseAddress + $"/customer/{requestDto.Pin}/loan-request/{requestDto.RequestId}/notification");
 
-            //var builder = new UriBuilder(client.BaseAddress + "/controller");
+            // Construct Request Body
+            var requestBody = new
+            {
+                actionKey = requestDto.Action
+            };
 
-            //string jsonString = JsonSerializer.Serialize(jsonData);
+            // Serialize Request Data
+            string jsonString = JsonSerializer.Serialize(requestBody);
 
-            //await Console.Out.WriteLineAsync(jsonString);
+            // Log request data (optional)
+            await Console.Out.WriteLineAsync(jsonString);
 
-            //byte[] contentBytes = Encoding.UTF8.GetBytes(jsonString);
+            // Create Request Content
+            byte[] contentBytes = Encoding.UTF8.GetBytes(jsonString);
+            var content = new ByteArrayContent(contentBytes);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            //var content = new ByteArrayContent(contentBytes);
+            // Send Request
+            HttpResponseMessage response = await client.PutAsync(builder.Uri, content);
 
-            //content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            // Handle Response
+            string result = await response.Content.ReadAsStringAsync();
+            // Log response data (optional)
+            await Console.Out.WriteLineAsync(result);
 
-            //HttpResponseMessage response = await client.PostAsync(builder.Uri, content);
-
-
-            //string result = await response.Content.ReadAsStringAsync();
-
-
-
-            await Console.Out.WriteLineAsync("Mock Send Request");
-
-            return Ok();
-
-
+            // Return Appropriate Response
+            if (response.IsSuccessStatusCode)
+            {
+                // Success
+                await Console.Out.WriteLineAsync("Notification sent successfully");
+                return Ok();
+            }
+            else
+            {
+                // Failure
+                await Console.Out.WriteLineAsync($"Failed to send notification. Status code: {response.StatusCode}");
+                return StatusCode((int)response.StatusCode);
+            }
         }
+
     }
 }
