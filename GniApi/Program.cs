@@ -25,30 +25,30 @@ builder.Services.AddSwaggerGen(c =>
         Description = "GNI Development APIs",
     });
 
-    var apiKeyScheme = new OpenApiSecurityScheme
-    {
-        Description = "API Key authentication",
-        Name = "ApiKey",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey
-    };
+    //var apiKeyScheme = new OpenApiSecurityScheme
+    //{
+    //    Description = "API Key authentication",
+    //    Name = "ApiKey",
+    //    In = ParameterLocation.Header,
+    //    Type = SecuritySchemeType.ApiKey
+    //};
 
-    c.AddSecurityDefinition("ApiKey", apiKeyScheme);
+    //c.AddSecurityDefinition("ApiKey", apiKeyScheme);
 
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "ApiKey"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
+    //c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    //{
+    //    {
+    //        new OpenApiSecurityScheme
+    //        {
+    //            Reference = new OpenApiReference
+    //            {
+    //                Type = ReferenceType.SecurityScheme,
+    //                Id = "ApiKey"
+    //            }
+    //        },
+    //        Array.Empty<string>()
+    //    }
+    //});
 });
 
 builder.Services.AddScoped<IOracleQueries, OracleQueries>();

@@ -10,7 +10,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace GniApi.Controllers
 {
     [Route("/api/v1/customers")]
-    [ServiceFilter(typeof(HeaderCheckActionFilter))]
+    //[ServiceFilter(typeof(HeaderCheckActionFilter))]
     [ApiController]
     public class CustomerController : ControllerBase
     {
