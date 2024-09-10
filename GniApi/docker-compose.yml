@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   webapi:
-    image: webapi-image
+    image: cf-mobile-api
     build:
       context: .
       dockerfile: Dockerfile
