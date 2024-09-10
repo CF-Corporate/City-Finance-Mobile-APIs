@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  webapi:
+    image: webapi-image
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7278:7278"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ./logs:/app/logs
