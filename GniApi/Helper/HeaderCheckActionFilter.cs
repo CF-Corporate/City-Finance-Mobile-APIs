@@ -19,9 +19,9 @@ namespace GniApi.Helper
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            var authorization = context.HttpContext.Request.Headers["ApiKey"];
+            //var authorization = context.HttpContext.Request.Headers["ApiKey"];
 
-            var authorization2 = context.HttpContext.Request.Cookies["ApiKey"];
+            //var authorization2 = context.HttpContext.Request.Cookies["ApiKey"];
 
 
             //if (AuthenticationHeaderValue.TryParse(authorization, out var value))
@@ -32,18 +32,18 @@ namespace GniApi.Helper
             //    }
             //    context.HttpContext.Response.Cookies.Append("ApiKey",value.ToString());
             //}
-             if (AuthenticationHeaderValue.TryParse(authorization, out var value2))
-            {
-                if (value2.ToString() != configuration.GetValue<string>("ApiKey"))
-                {
-                    context.Result = new UnauthorizedResult();
-                }
-            }
-            else
-            {
-                context.Result = new UnauthorizedResult();
+            // if (AuthenticationHeaderValue.TryParse(authorization, out var value2))
+            //{
+            //    if (value2.ToString() != configuration.GetValue<string>("ApiKey"))
+            //    {
+            //        context.Result = new UnauthorizedResult();
+            //    }
+            //}
+            //else
+            //{
+            //    context.Result = new UnauthorizedResult();
 
-            }
+            //}
         }
     }
 }
