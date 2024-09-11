@@ -27,24 +27,25 @@ namespace GniApi.Controllers
 
         // NEEDS DEVELOPMENT
         [HttpGet("{pin}/limit")]
-        public IActionResult Limit([FromRoute] string pin)
+        public IActionResult Limit([FromRoute] string pin = "5ZKX6JW")
         {
-            return Ok("""
-                {
-                    "limit": 5000
-                }
-                """);
+            return Ok($@"
+        {{
+            ""limit"": 5000,
+            ""fin"": ""{pin}""
+        }}
+    ");
             // Use the customer_fincode parameter here
             // Example: return Ok($"Fincode: {customer_fincode}");
         }
 
         // TESTED
         [HttpGet("{pin}/payment-history")]
-        public IActionResult PaymentHistory([FromRoute(Name = "pin")] string pin, 
-                                            string loanId, 
-                                            int page, 
-                                            int size, 
-                                            string sort)
+        public IActionResult PaymentHistory([FromRoute(Name = "pin")] string pin = "5ZKX6JW",
+                                            string loanId = "801T09230144S01",
+                                            int page = 0,
+                                            int size = 10,
+                                            string sort = "date,ASC")
         {
             var json = JsonSerializer.Serialize(new { pin, loanId, page, sort, size });
 
@@ -56,8 +57,8 @@ namespace GniApi.Controllers
         // needs to be discussed
         // select with PIN
         [HttpGet("{pin}/payment-history/{payment-id}")]
-        public IActionResult PaymentHistoryById([FromRoute(Name = "payment-id")] string paymentId,
-                                                 string loanId)
+        public IActionResult PaymentHistoryById([FromRoute(Name = "pin")] string pin = "5ZKX6JW",[FromRoute(Name = "payment-id")] string paymentId = "336786",
+                                                 string loanId = "801T09230144S01")
         {
             var json = JsonSerializer.Serialize(new { paymentId, loanId });
 
@@ -68,25 +69,25 @@ namespace GniApi.Controllers
 
 
         [HttpGet("{pin}/loans")]
-        public IActionResult Loans([FromRoute(Name = "pin")] string pin, 
-                                    string status, 
-                                    DateTime fromDate, 
-                                    DateTime toDate, 
-                                    int page, 
-                                    int size, 
-                                    string sort)
+        public IActionResult Loans([FromRoute(Name = "pin")] string pin = "5ZKX6JW",
+                                    string status = "Active",
+                                    DateTime? fromDate = null,
+                                    DateTime? toDate = null,
+                                    int page = 0,
+                                    int size = 10,
+                                    string sort = "date,ASC")
         {
-            var json = JsonSerializer.Serialize(new { pin, status, fromDate = fromDate.ToString("yyyy-MM-dd"), toDate = toDate.ToString("yyyy-MM-dd"), page, size, sort });
+                var json = JsonSerializer.Serialize(new { pin, status, fromDate = fromDate?.ToString("yyyy-MM-dd"), toDate = toDate?.ToString("yyyy-MM-dd"), page, size, sort });
 
-            var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_contracts", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+                var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_contracts", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
-            return this.Content(result, "application/json");
+                return this.Content(result, "application/json");
         }
 
 
 
         [HttpGet("{pin}/loans/{loan-id}")]
-        public IActionResult LoanContractsById([FromRoute(Name = "loan-id")] string loanId)
+        public IActionResult LoanContractsById([FromRoute(Name = "pin")] string pin = "5ZKX6JW",[FromRoute(Name = "loan-id")] string loanId = "801T09230144S01")
         {
             var json = JsonSerializer.Serialize(new { loanId });
 
@@ -98,8 +99,8 @@ namespace GniApi.Controllers
 
 
         [HttpGet("{pin}/loans/{loan-id}/payment-table")]
-        public IActionResult PaymentTable([FromRoute(Name = "pin")] string pin,
-                                          [FromRoute(Name = "loan-id")] string loanId)
+        public IActionResult PaymentTable([FromRoute(Name = "pin")] string pin = "5ZKX6JW",
+                                          [FromRoute(Name = "loan-id")] string loanId = "801T09230144S01")
         {
             var json = JsonSerializer.Serialize(new { loanId });
 
@@ -110,15 +111,15 @@ namespace GniApi.Controllers
         }
 
         [HttpGet("{pin}/loan-requests")]
-        public IActionResult LoanRequests([FromRoute(Name = "pin")] string pin, 
-                                              string status, 
-                                              DateTime fromDate,
-                                              DateTime toDate, 
-                                              int page, 
-                                              int size, 
-                                              string sort)
+        public IActionResult LoanRequests([FromRoute(Name = "pin")] string pin = "15MRAG2",
+                                              string status = "Pending",
+                                              DateTime? fromDate = null,
+                                              DateTime? toDate = null,
+                                              int page = 0,
+                                              int size = 10,
+                                              string sort = "date,ASC")
         {
-            var json = JsonSerializer.Serialize(new { pin, status, fromDate = fromDate.ToString("yyyy-MM-dd"), toDate = toDate.ToString("yyyy-MM-dd"), page, size, sort });
+            var json = JsonSerializer.Serialize(new { pin, status, fromDate = fromDate?.ToString("yyyy-MM-dd"), toDate = toDate?.ToString("yyyy-MM-dd"), page, size, sort });
 
             var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_requests", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
@@ -126,7 +127,7 @@ namespace GniApi.Controllers
         }
 
         [HttpGet("{pin}/loan-requests/{request-id}")]
-        public IActionResult LoanRequestById([FromRoute(Name = "request-id")]int requestId)
+        public IActionResult LoanRequestById([FromRoute(Name = "pin")] string pin = "15MRAG2" , [FromRoute(Name = "request-id")] int requestId = 155)
         {
             var json = JsonSerializer.Serialize(new { requestId });
 
@@ -153,7 +154,7 @@ namespace GniApi.Controllers
             var json = JsonSerializer.Serialize(new { requestId });
 
             var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_post_request",
-                new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, 
+                new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json },
                 new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
             return Content(result, "application/json");

@@ -1,4 +1,5 @@
 using GniApi.Helper;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,7 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "GNI Development APIs",
     });
+    c.SchemaFilter<DefaultValueSchemaFilter>();
 
     //var apiKeyScheme = new OpenApiSecurityScheme
     //{
@@ -50,6 +52,7 @@ builder.Services.AddSwaggerGen(c =>
     //    }
     //});
 });
+
 
 builder.Services.AddScoped<IOracleQueries, OracleQueries>();
 builder.Services.AddScoped<HeaderCheckActionFilter>();
