@@ -56,6 +56,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped<IOracleQueries, OracleQueries>();
 builder.Services.AddScoped<HeaderCheckActionFilter>();
+builder.Services.AddHttpClient();
 
 
 var app = builder.Build();

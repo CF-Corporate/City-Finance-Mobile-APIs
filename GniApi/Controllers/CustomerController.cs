@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Drawing;
+using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -15,28 +17,63 @@ namespace GniApi.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly IOracleQueries oracleQueries;
+        private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
 
         //private readonly IWebHostEnvironment webHostEnvironment;
 
-        public CustomerController(IOracleQueries oracleQueries)
+        public CustomerController(IOracleQueries oracleQueries, HttpClient httpClient, IConfiguration configuration)
         {
             this.oracleQueries = oracleQueries;
+            _httpClient = httpClient;
+            _httpClient.Timeout = TimeSpan.FromSeconds(30);
+            _configuration = configuration;
             //this.webHostEnvironment = webHostEnvironment;
         }
 
 
         // NEEDS DEVELOPMENT
         [HttpGet("{pin}/limit")]
-        public IActionResult Limit([FromRoute] string pin = "5ZKX6JW")
+        public async  Task<IActionResult> Limit([FromRoute] string pin = "5ZKX6JW")
         {
-            return Ok($@"
-        {{
-            ""limit"": 5000,
-            ""fin"": ""{pin}""
-        }}
-    ");
-            // Use the customer_fincode parameter here
-            // Example: return Ok($"Fincode: {customer_fincode}");
+
+            try
+            {
+                var url = $"{_configuration["Url:LimitUrl"].ToString()}?finCode={pin}";
+
+                var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+
+                requestMessage.Headers.Add("x-api-key", "city_finance");
+
+                var response = await _httpClient.SendAsync(requestMessage);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = JsonSerializer.Deserialize<JsonElement>(await response.Content.ReadAsStringAsync());
+
+                    var limitAmount = int.Parse(result.TryGetProperty("limitAmount", out var limitAmountProperty)
+                 ? limitAmountProperty.ToString()
+                 : "0");
+
+                    return StatusCode(200, new
+                    {
+                        Limit = limitAmount
+                    });
+                }
+                else
+                {
+                    return (int)response.StatusCode == 404 ? StatusCode(200, new
+                    {
+                        Limit = 0
+                    }) : StatusCode((int)response.StatusCode, "Error fetching data from external API");
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         // TESTED
