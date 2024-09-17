@@ -58,7 +58,7 @@ namespace GniApi.Controllers
 
                     return StatusCode(200, new
                     {
-                        Limit = limitAmount
+                        Limit = limitAmount > 0 ? limitAmount : 0,
                     });
                 }
                 else
