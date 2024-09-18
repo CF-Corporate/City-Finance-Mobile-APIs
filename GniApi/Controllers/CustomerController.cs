@@ -28,7 +28,7 @@ namespace GniApi.Controllers
         {
             this.oracleQueries = oracleQueries;
             _httpClient = httpClient;
-            _httpClient.Timeout = TimeSpan.FromSeconds(1);
+            _httpClient.Timeout = TimeSpan.FromSeconds(30);
             _configuration = configuration;
             //this.webHostEnvironment = webHostEnvironment;
         }
