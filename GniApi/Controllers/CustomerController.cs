@@ -167,21 +167,29 @@ namespace GniApi.Controllers
 
             var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_create_request", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
-            var sqlError = JsonSerializer.Deserialize<SqlError>(result, new JsonSerializerOptions
+            var response = JsonSerializer.Deserialize<ResponseModel>(result, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });
 
-            if(sqlError?.SqlCode != 0)
+
+            if (response?.SqlCode != 0)
             {
                 return StatusCode(400, new ApiResponse()
                 {
                     StatusCode = 400,
-                    ErrorText = "Texniki xeta bas verdi"
+                    ErrorText = "Tecnhical error"
                 });
             }
+            else
+            {
 
-            return Content(result, "application/json");
+                return Ok(new
+                {
+                    response.Result.Status,
+                    response.Result.RequestId
+                });
+            }
         }
 
         // has error
