@@ -153,7 +153,7 @@ namespace GniApi.Controllers
         }
 
 
-        [HttpPost("/loan-requests/create")]
+        [HttpPost("/api/v1/customers/loan-requests/create")]
         public async Task<IActionResult> CreateLoanRequest([FromBody] RequestDto model)
         {
 
