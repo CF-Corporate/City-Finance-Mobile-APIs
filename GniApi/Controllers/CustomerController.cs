@@ -4,12 +4,14 @@ using GniApi.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using System.Drawing;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace GniApi.Controllers
 {
@@ -48,7 +50,7 @@ namespace GniApi.Controllers
             else
                 return StatusCode(response.StatusCode, new
                 {
-                    ErrorMessage = response.Error
+                    ErrorMessage = response.ErrorText
                 });
         }
 
@@ -151,7 +153,7 @@ namespace GniApi.Controllers
         }
 
 
-        [HttpPost("{pin}/loan-requests/create")]
+        [HttpPost("/loan-requests/create")]
         public async Task<IActionResult> CreateLoanRequest([FromBody] RequestDto model)
         {
 
@@ -164,6 +166,20 @@ namespace GniApi.Controllers
             var json = JsonSerializer.Serialize(model);
 
             var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_create_request", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+
+            var sqlError = JsonSerializer.Deserialize<SqlError>(result, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            if(sqlError?.SqlCode != 0)
+            {
+                return StatusCode(400, new ApiResponse()
+                {
+                    StatusCode = 400,
+                    ErrorText = "Texniki xeta bas verdi"
+                });
+            }
 
             return Content(result, "application/json");
         }
@@ -218,7 +234,7 @@ namespace GniApi.Controllers
                     } : new()
                     {
                         StatusCode = (int)response.StatusCode,
-                        Error = "Error fetching data from external API"
+                        ErrorText = "Error fetching data from external API"
                     };
 
                 }
@@ -236,7 +252,7 @@ namespace GniApi.Controllers
                 return new()
                 {
                     StatusCode = 500,
-                    Error = $"Internal server error: {ex.Message}"
+                    ErrorText = $"Internal server error: {ex.Message}"
                 };
             }
 
