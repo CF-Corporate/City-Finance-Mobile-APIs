@@ -10,11 +10,24 @@ namespace GniApi.Responses
         public string ErrorText { get; set; }
     }
 
-    public class SqlError
+    public class ResponseModel
     {
         [JsonPropertyName("sql_code")]
         public int SqlCode { get; set; }
+
         [JsonPropertyName("sql_msg")]
         public string SqlMsg { get; set; }
+
+        [JsonPropertyName("result")]
+        public ResultModel Result { get; set; }
+    }
+
+    public class ResultModel
+    {
+        [JsonPropertyName("status")]
+        public string Status { get; set; }
+
+        [JsonPropertyName("requestId")]
+        public int RequestId { get; set; }
     }
 }

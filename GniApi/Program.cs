@@ -1,4 +1,6 @@
+using GniApi.CustomExtensions;
 using GniApi.Helper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
@@ -10,7 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(x =>
 {
-    x.Filters.Add(new HeaderCheckActionFilter(builder.Configuration));
+    x.Filters.Add<ValidateModelAttribute>();
+});
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
 });
 
 
@@ -67,10 +74,14 @@ var app = builder.Build();
 //    app.UseSwagger();
 //    app.UseSwaggerUI();
 //}
+
+
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.CustomExceptionHandler();
 
 
 app.UseAuthorization();
