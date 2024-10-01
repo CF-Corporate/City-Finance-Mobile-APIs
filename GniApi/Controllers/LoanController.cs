@@ -33,7 +33,7 @@ namespace GniApi.Controllers
 
 
 
-        //    return this.Content(result, "application/json");
+        //    return this.Ok(result);;
         //}
 
         //// TESTED
@@ -49,7 +49,7 @@ namespace GniApi.Controllers
 
 
 
-        //    return this.Content(result, "application/json");
+        //    return this.Ok(result);;
         //}
 
         //[HttpGet("Loan Payments/{pin}/loan-contracts")]
@@ -62,7 +62,7 @@ namespace GniApi.Controllers
         //    var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_payments", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
 
-        //    return Content(result, "application/json");
+        //    return Ok(result);;
         //}
 
         //[HttpGet("Loan Payment Info/{loanId}/loan-payment-info")]
@@ -73,7 +73,7 @@ namespace GniApi.Controllers
 
         //    var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_payment_info", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
-        //    return Content(result, "application/json");
+        //    return Ok(result);;
         //}
 
         //[HttpGet("Loan Payment Plan/{loanId}/loan-payment-plan")]
@@ -85,7 +85,7 @@ namespace GniApi.Controllers
         //    var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_payment_plan", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
 
-        //    return Content(result, "application/json");
+        //    return Ok(result);;
         //}
 
         //[HttpGet("Loan Requests/{pin}/loan-requests")]
@@ -96,7 +96,7 @@ namespace GniApi.Controllers
 
         //    var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_requests", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
-        //    return Content(result, "application/json");
+        //    return Ok(result);;
         //}
 
         //[HttpGet("Loan Request Info/{requestId}/loan-request-info")]
@@ -106,7 +106,7 @@ namespace GniApi.Controllers
 
         //    var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_info", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
-        //    return Content(result, "application/json");
+        //    return Ok(result);;
         //}
 
         //[HttpPost("CreateLoanRequest")]
@@ -116,7 +116,7 @@ namespace GniApi.Controllers
 
         //    var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_create_request", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
-        //    return Content(result, "application/json");
+        //    return Ok(result);;
         //}
 
         //[HttpPost("PostLoanRequest")]
@@ -126,7 +126,7 @@ namespace GniApi.Controllers
 
         //    var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_post_request", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
-        //    return Content(result, "application/json");
+        //    return Ok(result);;
         //}
         //[HttpPost("PayLoanRequest/{pin}")]
         //public IActionResult PayLoanRequest(string pin, string loanId, decimal amount, DateTime paymentDate)
@@ -135,7 +135,7 @@ namespace GniApi.Controllers
 
         //    var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_pay", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
-        //    return Content(result, "application/json");
+        //    return Ok(result);;
         //}
 
 
