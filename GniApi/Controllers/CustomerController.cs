@@ -187,6 +187,38 @@ namespace GniApi.Controllers
 
         }
 
+        [HttpPost("{pin}/loan-request/offer-approve")]
+        public IActionResult PostLoanRequestOfferApprove([FromRoute(Name = "pin")] string pin, int requestId)
+        {
+            var status = "Offer-approved";
+            var json = JsonSerializer.Serialize(new { status,requestId, pin });
+
+            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_action",
+                new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json },
+                new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+
+
+
+            return Ok(response.Result);
+        }
+
+
+        [HttpPost("{pin}/loan-request/offer-reject")]
+        public IActionResult PostLoanRequestOfferReject([FromRoute(Name = "pin")] string pin, int requestId)
+        {
+            var status = "Offer-rejected";
+            var json = JsonSerializer.Serialize(new { status, requestId, pin });
+
+            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_action",
+                new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json },
+                new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+
+
+
+            return Ok(response.Result);
+        }
+
+
         private async Task<ApiResponse> GetLimit(string pin)
         {
             try
