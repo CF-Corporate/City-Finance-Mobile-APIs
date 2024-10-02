@@ -19,7 +19,7 @@ namespace GniApi.Responses
         public string SqlMsg { get; set; }
 
         [JsonPropertyName("result")]
-        public ResultModel Result { get; set; }
+        public object Result { get; set; }
     }
 
     public class ResultModel

@@ -1,6 +1,9 @@
-﻿using Oracle.ManagedDataAccess.Client;
+﻿using GniApi.Exceptions;
+using GniApi.Responses;
+using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 using System.Data;
+using System.Text.Json;
 
 namespace GniApi.Helper
 {
@@ -11,7 +14,7 @@ namespace GniApi.Helper
         public void ExecuteDbProcedure(string pProcName, object[] values = null, string[] parameters = null);
         public DataTable GetDataSetFromDBProcedure(string p_ProcName, object[] values = null, string[] parameters = null);
         public (DataTable, int) GetDataSetFromDBProcedureWithCount(string p_ProcName, object[] values = null, string[] parameters = null);
-        public string GetDataSetFromDBFunction(string p_ProcName, object[] values = null, string[] parameters = null);
+        public ResponseModel GetDataSetFromDBFunction(string p_ProcName, object[] values = null, string[] parameters = null);
 
         public DataTable RunQuery(string query, object[] values = null, string[] parameters = null);
 
@@ -28,7 +31,7 @@ namespace GniApi.Helper
         {
             _configuration = configuration;
         }
-        public string GetDataSetFromDBFunction(string p_ProcName, object[] values = null, string[] parameters = null)
+        public ResponseModel GetDataSetFromDBFunction(string p_ProcName, object[] values = null, string[] parameters = null)
         {
             OracleConnection orclCon = null;
             try
@@ -125,7 +128,7 @@ namespace GniApi.Helper
 
                 OracleClob clobData = (OracleClob)p_refcursor.Value;
                 string result = clobData.Value;
-                
+
 
 
                 //var p_count = int.Parse(cmd.Parameters["p_count"].Value.ToString());
@@ -149,15 +152,26 @@ namespace GniApi.Helper
                 //int allRecordCount = 133_000;
 
 
+
+                var response = JsonSerializer.Deserialize<ResponseModel>(result, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (response?.SqlCode != 0)
+                {
+                    //if (response?.SqlCode == 100)
+                    //{
+                    //    throw new EntryNotFoundException("Tecnhical error");
+                    //}
+                    throw new EntryNotFoundException("Tecnhical error");
+                }
+
+
                 //da.Dispose();
                 //p_refcursor.Dispose();
                 cmd.Dispose();
-                return  result;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                throw new Exception(ex.Message);
+                return response;
             }
             finally
             {

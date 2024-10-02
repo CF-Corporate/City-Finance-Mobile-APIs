@@ -81,7 +81,7 @@ app.UseSwaggerUI();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.CustomExceptionHandler();
+app.CustomExceptionHadler();
 
 
 app.UseAuthorization();

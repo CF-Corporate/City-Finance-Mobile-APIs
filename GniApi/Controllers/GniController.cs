@@ -35,7 +35,7 @@ namespace GniApi.Controllers
 
 
 
-            return this.Content(result, "application/json");
+            return Ok(result);
         }
         [HttpGet("GetLoanContractsById/{loanId}")]
         public IActionResult GetLoanContractsById(string loanId)
@@ -49,7 +49,7 @@ namespace GniApi.Controllers
 
 
 
-            return this.Content(result, "application/json");
+            return Ok(result);
         }
         [HttpGet("GetLoanPayments")]
         public IActionResult GetLoanPayments(string pin, string loanId, int page, int size, string sort)
@@ -65,7 +65,7 @@ namespace GniApi.Controllers
 
 
 
-            return Content(result, "application/json");
+            return Ok(result);;
         }
         [HttpGet("GetLoanPaymentInfo/{loanId}")]
         public IActionResult GetLoanPayments(string paymentId, string loanId)
@@ -81,7 +81,7 @@ namespace GniApi.Controllers
 
 
 
-            return Content(result, "application/json");
+            return Ok(result);
         }
         [HttpGet("GetLoanPaymentPlan/{loanId}")]
         public IActionResult GetLoanPayment_plan(string loanId)
@@ -97,7 +97,7 @@ namespace GniApi.Controllers
 
 
 
-            return Content(result, "application/json");
+            return Ok(result);
         }
         [HttpGet("GetLoanRequests/{pin}")]
         public IActionResult GetLoanRequests(string pin,string status, DateTime fromDate, DateTime toDate, int page, int size, string sort)
@@ -113,7 +113,7 @@ namespace GniApi.Controllers
 
 
 
-            return Content(result, "application/json");
+            return Ok(result);;
         }
         [HttpGet("GetLoanRequestInfo/{requestId}")]
         public IActionResult GetLoanRequestInfo(int requestId)
@@ -129,7 +129,7 @@ namespace GniApi.Controllers
 
 
 
-            return Content(result, "application/json");
+            return Ok(result);
         }
         [HttpPost("CreateLoanRequest")]
         public IActionResult CreateLoanRequest([FromBody] RequestDto model)
@@ -138,7 +138,7 @@ namespace GniApi.Controllers
 
             var result = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_create_request", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
-            return Content(result, "application/json");
+            return Ok(result);;
         }
 
         [HttpPost("PostLoanRequest")]
@@ -155,7 +155,7 @@ namespace GniApi.Controllers
 
 
 
-            return Content(result, "application/json");
+            return Ok(result);
         }
         [HttpPost("PayLoanRequest/{pin}")]
         public IActionResult PayLoanRequest( string pin,string loanId,decimal amount, DateTime paymentDate)
@@ -171,7 +171,7 @@ namespace GniApi.Controllers
 
 
 
-            return Content(result, "application/json");
+            return Ok(result);;
         }
         //[HttpGet("Pdf")]
         //public async Task<IActionResult> GetPdf()
