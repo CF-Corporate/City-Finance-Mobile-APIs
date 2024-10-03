@@ -7,6 +7,7 @@ namespace GniApi.Responses
         public int StatusCode { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public object Item { get; set; }
+        public object MainLimitAmount { get; set; }
         public string ErrorText { get; set; }
     }
 

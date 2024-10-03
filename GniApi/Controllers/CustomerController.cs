@@ -235,7 +235,7 @@ namespace GniApi.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var result = JsonSerializer.Deserialize<JsonElement>(await response.Content.ReadAsStringAsync());
-
+                    var mainLimitAmount = result.TryGetProperty("mainLimitAmount", out var mainAmountProperty);
                     var limitAmount = int.Parse(result.TryGetProperty("limitAmount", out var limitAmountProperty)
                  ? limitAmountProperty.ToString()
                  : "0");
@@ -243,7 +243,8 @@ namespace GniApi.Controllers
                     return new()
                     {
                         StatusCode = 200,
-                        Item = limitAmount > 0 ? limitAmount : 0
+                        Item = limitAmount > 0 ? limitAmount : 0,
+                        MainLimitAmount = mainLimitAmount,
                     };
                 }
                 else
