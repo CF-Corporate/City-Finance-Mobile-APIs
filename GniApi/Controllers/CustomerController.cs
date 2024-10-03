@@ -145,7 +145,7 @@ namespace GniApi.Controllers
         public async Task<IActionResult> LoanRequestById([FromRoute(Name = "pin")] string pin = "15MRAG2", [FromRoute(Name = "request-id")] int requestId = 155)
         {
 
-            var json = JsonSerializer.Serialize(new { requestId,pin });
+            var json = JsonSerializer.Serialize(new { requestId, pin });
 
             var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_info", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
@@ -191,7 +191,7 @@ namespace GniApi.Controllers
         public IActionResult PostLoanRequestOfferApprove([FromRoute(Name = "pin")] string pin, int requestId)
         {
             var status = "Offer-approved";
-            var json = JsonSerializer.Serialize(new { status,requestId, pin });
+            var json = JsonSerializer.Serialize(new { status, requestId, pin });
 
             var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_action",
                 new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json },
@@ -235,10 +235,10 @@ namespace GniApi.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var result = JsonSerializer.Deserialize<JsonElement>(await response.Content.ReadAsStringAsync());
-                    var mainLimitAmount = result.TryGetProperty("mainLimitAmount", out var mainAmountProperty);
+                    var mainLimitAmount = int.Parse(result.TryGetProperty("mainLimitAmount", out var mainAmountProperty)
+                        ? mainAmountProperty.ToString() : "0");
                     var limitAmount = int.Parse(result.TryGetProperty("limitAmount", out var limitAmountProperty)
-                 ? limitAmountProperty.ToString()
-                 : "0");
+                        ? limitAmountProperty.ToString() : "0");
 
                     return new()
                     {
