@@ -41,7 +41,8 @@ namespace GniApi.Controllers
             if (response.StatusCode == 200)
                 return StatusCode(response.StatusCode, new
                 {
-                    Limit = response.Item
+                    Limit = response.Item,
+                    MainLimitAmount = response.MainLimitAmount
                 });
 
 
