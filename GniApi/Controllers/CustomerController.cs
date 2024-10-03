@@ -236,8 +236,8 @@ namespace GniApi.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var result = JsonSerializer.Deserialize<JsonElement>(await response.Content.ReadAsStringAsync());
-                    var mainLimitAmount = int.Parse(result.TryGetProperty("mainLimitAmount", out var mainAmountProperty)
-                        ? mainAmountProperty.ToString() : "0");
+                    //var mainLimitAmount = int.Parse(result.TryGetProperty("mainLimitAmount", out var mainAmountProperty)
+                    //    ? mainAmountProperty.ToString() : "0");
                     var limitAmount = int.Parse(result.TryGetProperty("limitAmount", out var limitAmountProperty)
                         ? limitAmountProperty.ToString() : "0");
 
@@ -245,7 +245,7 @@ namespace GniApi.Controllers
                     {
                         StatusCode = 200,
                         Item = limitAmount > 0 ? limitAmount : 0,
-                        MainLimitAmount = mainLimitAmount,
+                        MainLimitAmount = limitAmount > 0 ? limitAmount : 0
                     };
                 }
                 else
@@ -254,7 +254,8 @@ namespace GniApi.Controllers
                     return (int)response.StatusCode == 404 ? new ApiResponse()
                     {
                         StatusCode = 200,
-                        Item = 0
+                        Item = 0,
+                        MainLimitAmount = 0
                     } : new()
                     {
                         StatusCode = (int)response.StatusCode,
@@ -269,6 +270,7 @@ namespace GniApi.Controllers
                 {
                     StatusCode = 200,
                     Item = 0,
+                    MainLimitAmount = 0
                 };
             }
             catch (Exception ex)
