@@ -23,6 +23,8 @@ namespace GniApi.Controllers
         private readonly IOracleQueries oracleQueries;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        private string _userName;
+        private string _password;
 
 
         public CustomerController(IOracleQueries oracleQueries, HttpClient httpClient, IConfiguration configuration)
@@ -31,6 +33,8 @@ namespace GniApi.Controllers
             _httpClient = httpClient;
             _httpClient.Timeout = TimeSpan.FromSeconds(30);
             _configuration = configuration;
+            _userName = _configuration["Oracle_Login:UserName"];
+            _password = _configuration["Oracle_Login:Password"];
         }
 
 
@@ -63,7 +67,7 @@ namespace GniApi.Controllers
         {
             var json = JsonSerializer.Serialize(new { pin, loanId, page, sort, size });
 
-            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_payments", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_payments", new object[] { "MOBILE", _userName, _password, json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
 
             return Ok(response.Result);
@@ -78,7 +82,7 @@ namespace GniApi.Controllers
         {
             var json = JsonSerializer.Serialize(new { paymentId, loanId });
 
-            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_payment_info", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_payment_info", new object[] { "MOBILE", _userName, _password, json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
             return Ok(response.Result);
         }
@@ -95,7 +99,7 @@ namespace GniApi.Controllers
         {
             var json = JsonSerializer.Serialize(new { pin, status, fromDate = fromDate?.ToString("yyyy-MM-dd"), toDate = toDate?.ToString("yyyy-MM-dd"), page, size, sort });
 
-            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_contracts", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_contracts", new object[] { "MOBILE", _userName, _password, json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
             return Ok(response.Result);
         }
@@ -107,7 +111,7 @@ namespace GniApi.Controllers
         {
             var json = JsonSerializer.Serialize(new { loanId });
 
-            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_contract_info", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_contract_info", new object[] { "MOBILE", _userName, _password, json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
             return Ok(response.Result);
         }
@@ -120,7 +124,7 @@ namespace GniApi.Controllers
         {
             var json = JsonSerializer.Serialize(new { loanId });
 
-            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_payment_plan", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_payment_plan", new object[] { "MOBILE", _userName, _password, json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
             return Ok(response.Result);
 
@@ -137,7 +141,7 @@ namespace GniApi.Controllers
         {
             var json = JsonSerializer.Serialize(new { pin, status, fromDate = fromDate?.ToString("yyyy-MM-dd"), toDate = toDate?.ToString("yyyy-MM-dd"), page, size, sort });
 
-            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_requests", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_requests", new object[] { "MOBILE", _userName, _password, json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
             return Ok(response.Result);
         }
@@ -148,7 +152,7 @@ namespace GniApi.Controllers
 
             var json = JsonSerializer.Serialize(new { requestId, pin });
 
-            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_info", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_info", new object[] { "MOBILE", _userName, _password, json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
             return Ok(response.Result);
         }
@@ -159,14 +163,18 @@ namespace GniApi.Controllers
         {
 
             int? limit = (int)(await GetLimit(model.customer.pin)).Item;
-            if (limit > model.loanRequest.amount)
+            if (limit >= model.loanRequest.amount)
             {
                 model.loanRequest.limitExceeded = true;
+            }
+            else
+            {
+                model.loanRequest.limitExceeded = false;
             }
 
             var json = JsonSerializer.Serialize(model);
 
-            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_create_request", new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_create_request", new object[] { "MOBILE", "WS_USER", "Cf#2024@1!", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
 
             return Ok(response.Result);
@@ -179,7 +187,7 @@ namespace GniApi.Controllers
             var json = JsonSerializer.Serialize(new { requestId, pin });
 
             var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_post_request",
-                new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json },
+                new object[] { "MOBILE", _userName, _password, json },
                 new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
 
@@ -195,7 +203,7 @@ namespace GniApi.Controllers
             var json = JsonSerializer.Serialize(new { status, requestId, pin });
 
             var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_action",
-                new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json },
+                new object[] { "MOBILE", _userName, _password, json },
                 new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
 
@@ -211,7 +219,7 @@ namespace GniApi.Controllers
             var json = JsonSerializer.Serialize(new { status, requestId, pin });
 
             var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_action",
-                new object[] { "MOBILE", "HADINAJAFI", "HADI@12345", json },
+                new object[] { "MOBILE", _userName, _password, json },
                 new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
 
