@@ -1,10 +1,13 @@
-﻿using GniApi.Dtos.RequestDto.RequestDto;
+﻿using GniApi.Dtos.RequestDto;
+using GniApi.Dtos.RequestDto.RequestDto;
 using GniApi.Helper;
 using GniApi.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel;
 using System.Drawing;
 using System.Net.Http;
 using System.Net.NetworkInformation;
@@ -132,12 +135,13 @@ namespace GniApi.Controllers
 
         [HttpGet("{pin}/loan-requests")]
         public IActionResult LoanRequests([FromRoute(Name = "pin")] string pin = "15MRAG2",
-                                              string status = "Pending",
+                                            [SwaggerParameter(Description = "'Approved', 'Rejected', 'Pending', 'Offer-back', 'Offer-approved', 'Offer-rejected'")] string? status = null,
                                               DateTime? fromDate = null,
                                               DateTime? toDate = null,
                                               int page = 0,
                                               int size = 10,
-                                              string sort = "date,ASC")
+                                               [SwaggerParameter(Description = "'date,ASC'")]
+                                              string sort = null)
         {
             var json = JsonSerializer.Serialize(new { pin, status, fromDate = fromDate?.ToString("yyyy-MM-dd"), toDate = toDate?.ToString("yyyy-MM-dd"), page, size, sort });
 
@@ -291,5 +295,6 @@ namespace GniApi.Controllers
             }
 
         }
+
     }
 }
