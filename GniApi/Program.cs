@@ -3,6 +3,7 @@ using GniApi.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +34,7 @@ builder.Services.AddSwaggerGen(c =>
         Description = "GNI Development APIs",
     });
     c.SchemaFilter<DefaultValueSchemaFilter>();
-
+    c.EnableAnnotations();
     //var apiKeyScheme = new OpenApiSecurityScheme
     //{
     //    Description = "API Key authentication",
