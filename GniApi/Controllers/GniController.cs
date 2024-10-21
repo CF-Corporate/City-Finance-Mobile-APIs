@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 namespace GniApi.Controllers
 {
 
-    [Route("api/[controller]")]
+    [Route("/api/v1/gni")]
     [ApiController]
     //[ServiceFilter(typeof(HeaderCheckActionFilter))]
     class GniController : ControllerBase

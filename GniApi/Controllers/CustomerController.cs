@@ -232,6 +232,18 @@ namespace GniApi.Controllers
         }
 
 
+        [HttpPost("{pin}/loans/pay")]
+        public IActionResult PayLoan([FromRoute] string pin, string loanId, decimal amount, DateTime paymentDate)
+        {
+            var json = JsonSerializer.Serialize(new { pin, loanId, amount, paymentDate });
+
+            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_pay", new object[] { "MOBILE", _userName, _password, json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+
+            return Ok(response.Result);
+
+        }
+
+
         private async Task<ApiResponse> GetLimit(string pin)
         {
             try
