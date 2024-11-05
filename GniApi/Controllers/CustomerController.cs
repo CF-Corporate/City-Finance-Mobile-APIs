@@ -265,10 +265,13 @@ namespace GniApi.Controllers
                     var limitAmount = int.Parse(result.TryGetProperty("limitAmount", out var limitAmountProperty)
                         ? limitAmountProperty.ToString() : "0");
 
+                    var remainingLimitAmount = int.Parse(result.TryGetProperty("remainingLimitAmount", out var remainingLimitAmountProperty)
+                        ? remainingLimitAmountProperty.ToString() : "0");
+
                     return new()
                     {
                         StatusCode = 200,
-                        Item = limitAmount > 0 ? limitAmount : 0,
+                        Item = remainingLimitAmount > 0 ? remainingLimitAmount : 0,
                         MainLimitAmount = limitAmount > 0 ? limitAmount : 0
                     };
                 }
