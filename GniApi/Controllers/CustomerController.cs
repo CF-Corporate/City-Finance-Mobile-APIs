@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -175,11 +176,10 @@ namespace GniApi.Controllers
             {
                 model.loanRequest.limitExceeded = false;
             }
-
-            var json = JsonSerializer.Serialize(model);
+            
+            var json = JsonConvert.SerializeObject(model);
 
             var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_create_request", new object[] { "MOBILE", "WS_USER", "Cf#2024@1!", json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
-
 
             return Ok(response.Result);
         }
