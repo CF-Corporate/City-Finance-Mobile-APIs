@@ -1,20 +1,10 @@
-﻿using GniApi.Dtos.RequestDto;
-using GniApi.Dtos.RequestDto.RequestDto;
+﻿using GniApi.Dtos.RequestDto.RequestDto;
 using GniApi.Helper;
 using GniApi.Responses;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Annotations;
-using System.ComponentModel;
-using System.Drawing;
-using System.Net.Http;
-using System.Net.NetworkInformation;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace GniApi.Controllers
@@ -184,7 +174,6 @@ namespace GniApi.Controllers
             return Ok(response.Result);
         }
 
-        // has error
         [HttpPost("{pin}/loan-requests/post")]
         public IActionResult PostLoanRequest([FromRoute(Name = "pin")] string pin, int requestId)
         {

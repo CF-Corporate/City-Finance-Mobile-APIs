@@ -14,7 +14,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(x =>
 {
     x.Filters.Add<ValidateModelAttribute>();
-});
+}).AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+    options.JsonSerializerOptions.WriteIndented = true;
+});;
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
