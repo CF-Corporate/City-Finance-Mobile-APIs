@@ -152,6 +152,17 @@ namespace GniApi.Controllers
             return Ok(response.Result);
         }
 
+        [HttpGet("{pin}/loan-request-pdf-url/{request-id}")]
+        public async Task<IActionResult> LoanRequestPdfUrl([FromRoute(Name = "pin")] string pin = "15MRAG2", [FromRoute(Name = "request-id")] int requestId = 155)
+        {
+
+            var json = JsonSerializer.Serialize(new { requestId, pin });
+
+            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_pdf_url", new object[] { "MOBILE", _userName, _password, json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+
+            return Ok(response.Result);
+        }
+
 
         [HttpPost("loan-requests/create")]
         public async Task<IActionResult> CreateLoanRequest([FromBody] RequestDto model)
