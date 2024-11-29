@@ -213,11 +213,11 @@ namespace GniApi.Controllers
             int? limit = (int)(await GetLimit(model.customer.pin)).Item;
             if (limit >= model.loanRequest.amount)
             {
-                model.loanRequest.limitExceeded = true;
+                model.loanRequest.limitExceeded = false;
             }
             else
             {
-                model.loanRequest.limitExceeded = false;
+                model.loanRequest.limitExceeded = true;
             }
             
             var json = JsonConvert.SerializeObject(model);
