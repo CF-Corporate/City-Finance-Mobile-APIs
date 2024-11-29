@@ -39,31 +39,40 @@ builder.Services.AddSwaggerGen(c =>
     });
     c.SchemaFilter<DefaultValueSchemaFilter>();
     c.EnableAnnotations();
-    //var apiKeyScheme = new OpenApiSecurityScheme
-    //{
-    //    Description = "API Key authentication",
-    //    Name = "ApiKey",
-    //    In = ParameterLocation.Header,
-    //    Type = SecuritySchemeType.ApiKey
-    //};
+    var apiKeyScheme = new OpenApiSecurityScheme
+    {
+        Description = "API Key authentication",
+        Name = "ApiKey",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey
+    };
 
-    //c.AddSecurityDefinition("ApiKey", apiKeyScheme);
+    c.AddSecurityDefinition("ApiKey", apiKeyScheme);
 
-    //c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    //{
-    //    {
-    //        new OpenApiSecurityScheme
-    //        {
-    //            Reference = new OpenApiReference
-    //            {
-    //                Type = ReferenceType.SecurityScheme,
-    //                Id = "ApiKey"
-    //            }
-    //        },
-    //        Array.Empty<string>()
-    //    }
-    //});
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "ApiKey"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
+
+
+builder.Services.AddCors(o => o.AddPolicy("MyPolicy", b =>
+{
+    b.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .WithExposedHeaders("Content-Disposition");
+}));
 
 
 builder.Services.AddScoped<IOracleQueries, OracleQueries>();
@@ -85,6 +94,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseCors("MyPolicy");
 
 app.CustomExceptionHadler();
 

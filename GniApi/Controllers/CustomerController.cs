@@ -10,7 +10,7 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 namespace GniApi.Controllers
 {
     [Route("/api/v1/customers")]
-    //[ServiceFilter(typeof(HeaderCheckActionFilter))]
+    [ServiceFilter(typeof(HeaderCheckActionFilter))]
     [ApiController]
     public class CustomerController : ControllerBase
     {
@@ -153,20 +153,22 @@ namespace GniApi.Controllers
         }
 
         [HttpGet("{pin}/loan-request-pdf-url/{request-id}")]
-        public async Task<IActionResult> LoanRequestPdfUrl([FromRoute(Name = "pin")] string pin = "15MRAG2", [FromRoute(Name = "request-id")] int requestId = 155)
+        public async Task<IActionResult> LoanRequestPdfUrl([FromRoute(Name = "pin")] string pin = "15MRAG2", [FromRoute(Name = "request-id")] int requestId = 155,[FromQuery] bool dowload = false)
         {
 
             var json = JsonSerializer.Serialize(new { requestId, pin });
 
-            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_pdf_url", new object[] { "MOBILE", _userName, _password, json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
+            var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_pdf_url", 
+                new object[] { "MOBILE", _userName, _password, json }, 
+                new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
             if (response?.Result == null)
             {
                 return NotFound("PDF URL not found.");
             }
-            
+
             var pdfResponse = JsonSerializer.Deserialize<PdfUrlResponse>(response.Result.ToString());
-            
+
             using (var httpClient = new HttpClient())
             {
                 var blobResponse = await httpClient.GetAsync(pdfResponse.Url);
@@ -176,19 +178,30 @@ namespace GniApi.Controllers
                     return StatusCode((int)blobResponse.StatusCode, "Failed to fetch the PDF.");
                 }
 
-                var blobData = await blobResponse.Content.ReadAsByteArrayAsync();
-                
-                var contentType = blobResponse.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
-                
-                Console.WriteLine($"Content Type: {contentType}");
-                var fileName = blobResponse.Content.Headers.ContentDisposition?.FileName ?? "report.pdf";
-                
-                Response.Headers.Clear(); 
-                Response.Headers.Append("Content-Type", contentType);
-                Response.Headers.Append("Content-Disposition", $"inline; filename=\"{fileName}\"");
-               
+                var fileStream = await blobResponse.Content.ReadAsStreamAsync();
 
-                return File(blobData, contentType,fileName);
+                var contentType = blobResponse.Content.Headers.ContentType?.MediaType ?? "application/pdf";
+
+                Response.Clear();
+                Response.Headers.Clear();
+
+                var fileName = blobResponse.Content.Headers.ContentDisposition?.FileName ?? "report.pdf";
+                if (dowload)
+                {
+                    Response.Headers.Append("Content-Disposition", $"");
+                    Response.Headers["Content-Disposition"] = $"attachment; filename={fileName}";
+                }
+                else
+                {
+                    Response.Headers.Append("Content-Disposition", $"inline");
+                    Response.Headers["Content-Disposition"] = $"inline; filename={fileName}";
+                    Response.Headers.Append("X-Content-Type-Options", "nosniff");
+                }
+                Response.Headers.Append("Content-Type", contentType);
+            
+
+
+                return File(fileStream, "application/pdf");
             }
         }
 
