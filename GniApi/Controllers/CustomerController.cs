@@ -160,7 +160,36 @@ namespace GniApi.Controllers
 
             var response = oracleQueries.GetDataSetFromDBFunction("cfmb_loan_request_pdf_url", new object[] { "MOBILE", _userName, _password, json }, new string[] { "p_consumer", "p_username", "p_password", "p_data" });
 
-            return Ok(response.Result);
+            if (response?.Result == null)
+            {
+                return NotFound("PDF URL not found.");
+            }
+            
+            var pdfResponse = JsonSerializer.Deserialize<PdfUrlResponse>(response.Result.ToString());
+            
+            using (var httpClient = new HttpClient())
+            {
+                var blobResponse = await httpClient.GetAsync(pdfResponse.Url);
+
+                if (!blobResponse.IsSuccessStatusCode)
+                {
+                    return StatusCode((int)blobResponse.StatusCode, "Failed to fetch the PDF.");
+                }
+
+                var blobData = await blobResponse.Content.ReadAsByteArrayAsync();
+                
+                var contentType = blobResponse.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
+                
+                Console.WriteLine($"Content Type: {contentType}");
+                var fileName = blobResponse.Content.Headers.ContentDisposition?.FileName ?? "report.pdf";
+                
+                Response.Headers.Clear(); 
+                Response.Headers.Append("Content-Type", contentType);
+                Response.Headers.Append("Content-Disposition", $"inline; filename=\"{fileName}\"");
+               
+
+                return File(blobData, contentType,fileName);
+            }
         }
 
 
